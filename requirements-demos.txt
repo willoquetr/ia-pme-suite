@@ -1,0 +1,4 @@
+flask
+flask-cors
+# optional for production/demo API
+requests

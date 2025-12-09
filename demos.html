@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Démos Interactives - IA PME</title>
+    <!-- SheetJS for XLSX parsing -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.18.5/package/dist/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -200,6 +202,18 @@
             animation: spin 1s linear infinite;
         }
 
+        .pay-button {
+            display: inline-block;
+            padding: 10px 16px;
+            background: #27ae60;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -225,6 +239,8 @@
                     <div>
                         <h3>Entrez votre email</h3>
                         <textarea id="email-input" placeholder="Collez le contenu de votre email ici..."></textarea>
+                        <div style="margin-top:10px; font-size:12px; color:#666">Ou téléversez un fichier texte (.txt ou .eml)</div>
+                        <input id="email-file" type="file" accept=".txt,.eml" style="margin-top:8px;" onchange="handleEmailFileUpload(event)">
                         <div class="button-group">
                             <button onclick="classifyEmail()">🔍 Classifier</button>
                             <button onclick="clearEmail()">🗑️ Effacer</button>
@@ -289,6 +305,8 @@
                     <div>
                         <h3>Données à analyser</h3>
                         <label for="excel-data">Entrez vos données (format: colonne1,colonne2 | valeur1,valeur2)</label>
+                        <div style="margin-top:8px; font-size:12px; color:#666">Ou téléversez un fichier CSV (.csv)</div>
+                        <input id="excel-file" type="file" accept=".csv" style="margin-top:8px; margin-bottom:10px;" onchange="handleExcelFileUpload(event)">
                         <textarea id="excel-data" placeholder="Exemple:&#10;Nom,Email,Montant&#10;Alice,alice@test.fr,100&#10;Bob,,200&#10;Bob,bob@test.fr,200" style="font-size: 12px; min-height: 200px;"></textarea>
                         <div class="button-group">
                             <button onclick="analyzeExcel()">🔎 Analyser</button>
@@ -317,6 +335,16 @@
     </footer>
 
     <script>
+        // Load SheetJS (XLSX) for optional .xlsx parsing if online
+        (function(){
+            var s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+            s.async = true;
+            s.onload = function(){ console.info('SheetJS (XLSX) loaded'); };
+            s.onerror = function(){ console.info('SheetJS not available (xlsx support disabled)'); };
+            document.head.appendChild(s);
+        })();
+
         // ============ EMAIL CLASSIFIER ============
         const emailCategories = ['facture', 'devis', 'reclamation', 'spam', 'information', 'autre'];
         
@@ -533,6 +561,15 @@
                 html += `<p style="color: #999;">Aperçu du document de type "${docType}"</p>`;
             }
             
+            // Add a simple mailto "Payer / Contacter" button that opens the owner's email
+            try {
+                const subject = encodeURIComponent(docType.toUpperCase() + ' - Paiement - ' + (fields.nom_client || ''));
+                const body = encodeURIComponent('Montant: ' + (fields.montant || '') + ' EUR\nClient: ' + (fields.nom_client || '') + '\nEmail: ' + (fields.email_client || ''));
+                html += `<div style="margin-top:20px;"><a class="pay-button" href="mailto:willoquetr@gmail.com?subject=${subject}&body=${body}">Payer / Contacter</a></div>`;
+            } catch (e) {
+                // ignore
+            }
+
             html += `</div>`;
             return html;
         }
@@ -658,6 +695,58 @@ Charlie,charlie@test.fr,,Inactif
             document.getElementById('excel-data').value = '';
             document.getElementById('excel-result').style.display = 'none';
             document.getElementById('excel-placeholder').style.display = 'block';
+        }
+
+        // ============ FILE UPLOAD HELPERS ============
+        function handleEmailFileUpload(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result || '';
+                document.getElementById('email-input').value = text;
+                // Optionally auto-run classification for convenience
+                try { classifyEmail(); } catch (err) { /* ignore */ }
+            };
+            reader.readAsText(file, 'utf-8');
+        }
+
+        function handleExcelFileUpload(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const name = (file.name || '').toLowerCase();
+            if (name.endsWith('.csv')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result || '';
+                    document.getElementById('excel-data').value = text;
+                    try { analyzeExcel(); } catch (err) { /* ignore */ }
+                };
+                reader.readAsText(file, 'utf-8');
+                return;
+            }
+
+            // If XLSX and SheetJS (XLSX) is loaded, parse it to CSV
+            if ((name.endsWith('.xlsx') || name.endsWith('.xls')) && window.XLSX) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = e.target.result;
+                        const workbook = XLSX.read(data, { type: 'binary' });
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const csv = XLSX.utils.sheet_to_csv(firstSheet);
+                        document.getElementById('excel-data').value = csv;
+                        try { analyzeExcel(); } catch (err) { /* ignore */ }
+                    } catch (err) {
+                        alert('Impossible de parser le fichier .xlsx dans la démo. Convertissez en CSV.');
+                    }
+                };
+                // read as binary string for SheetJS
+                reader.readAsBinaryString(file);
+                return;
+            }
+
+            alert('Type de fichier non supporté. Utilisez .csv ou .xlsx (xlsx nécessite SheetJS dans la page).');
         }
 
         // Initialize PDF fields on load

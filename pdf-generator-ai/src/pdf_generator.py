@@ -109,14 +109,15 @@ class PDFGenerator:
             if not is_valid:
                 return False, validation_msg, None
             
-            # Créer dossier de sortie
-            os.makedirs(settings.pdf_output_dir, exist_ok=True)
+            # Créer dossier de sortie (avec fallback si settings n'est pas chargé)
+            output_dir = getattr(settings, 'pdf_output_dir', './generated_pdfs')
+            os.makedirs(output_dir, exist_ok=True)
             
             # Chemin de sortie
             if not output_path:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 output_path = os.path.join(
-                    settings.pdf_output_dir,
+                    output_dir,
                     f"{doc_type}_{timestamp}.pdf"
                 )
             
@@ -189,8 +190,9 @@ class PDFGenerator:
             story.append(Spacer(1, 0.5*inch))
             
             # Pied de page
+            company = getattr(settings, 'company_name', 'Your Company')
             footer_data = [
-                [settings.company_name, datetime.now().strftime("%Y-%m-%d")],
+                [company, datetime.now().strftime("%Y-%m-%d")],
             ]
             footer_table = Table(footer_data, colWidths=[3*inch, 2*inch])
             footer_table.setStyle(TableStyle([

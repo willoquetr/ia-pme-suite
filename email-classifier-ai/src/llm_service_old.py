@@ -30,6 +30,12 @@ class MistralProvider(LLMProvider):
     """Provider pour Mistral API (gratuit avec limites)."""
     
     def __init__(self, api_key: str = None):
+        """
+        Initialiser Mistral.
+        
+        Args:
+            api_key: Clé API Mistral (par défaut depuis config)
+        """
         self.api_key = api_key or settings.mistral_api_key
         self.base_url = "https://api.mistral.ai/v1"
         self.model = "mistral-small"
@@ -56,48 +62,6 @@ class MistralProvider(LLMProvider):
         except Exception as e:
             app_logger.error(f"Mistral API error: {e}")
             return None
-    
-    def classify_email(self, email_content: str) -> Dict[str, any]:
-        """Classifier un email avec Mistral."""
-        prompt = f"""Classifie l'email suivant dans UNE SEULE categorie.
-Categories: facture, devis, reclamation, spam, information, autre
-
-Email:
-{email_content}
-
-Reponds en JSON valide: {{"category": "...", "confidence": 0.5, "reason": ""}}"""
-        
-        response = self._make_request(prompt)
-        if response:
-            try:
-                start = response.find('{')
-                if start != -1:
-                    data = json.loads(response[start:])
-                    return {
-                        "category": data.get("category", "autre"),
-                        "confidence": float(data.get("confidence", 0.5)),
-                        "reason": data.get("reason", "")
-                    }
-            except Exception as e:
-                app_logger.warning(f"JSON parse error: {e}")
-        return {"category": "autre", "confidence": 0.3, "reason": "API error"}
-    
-    def summarize_email(self, email_content: str) -> str:
-        """Résumer un email."""
-        prompt = f"Resume l'email suivant en 2-3 phrases:\n\n{email_content}\n\nResume:"
-        response = self._make_request(prompt)
-        return response or "Impossible de resumer"
-    
-    def generate_response(self, email_content: str, category: str, template: str = "") -> str:
-        """Générer une réponse professionnelle."""
-        template_instruction = f"Template:\n{template}\n" if template else ""
-        prompt = f"""Genere une reponse professionnelle a cet email '{category}' (1-2 paragraphes).
-{template_instruction}
-Email: {email_content}
-
-Reponse:"""
-        response = self._make_request(prompt)
-        return response or "Impossible de generer une reponse"
 
 
 class GroqProvider(LLMProvider):
@@ -107,6 +71,7 @@ class GroqProvider(LLMProvider):
         self.api_key = api_key or settings.groq_api_key
         self.base_url = "https://api.groq.com/openai/v1"
         self.model = "mixtral-8x7b-32768"
+        # Semaphore to limit concurrent Groq requests in this process
         maxc = getattr(settings, 'groq_max_concurrent', 4)
         self._sema = threading.BoundedSemaphore(maxc)
 
@@ -115,7 +80,7 @@ class GroqProvider(LLMProvider):
         try:
             acquired = self._sema.acquire(timeout=10)
             if not acquired:
-                app_logger.warning("Groq concurrency limit reached")
+                app_logger.warning("Groq concurrency limit reached, rejecting request")
                 return None
             response = requests.post(
                 f"{self.base_url}/chat/completions",
@@ -144,67 +109,102 @@ class GroqProvider(LLMProvider):
                     pass
 
     def classify_email(self, email_content: str) -> Dict[str, any]:
-        """Classifier un email avec Groq."""
-        prompt = f"""Classifie l'email suivant dans UNE SEULE categorie.
-Categories: facture, devis, reclamation, spam, information, autre
+        prompt = f"Classifie cet email en une des catégories: facture, devis, reclamation, spam, information, autre.\nEmail:\n{email_content}\nRéponds au format JSON: {'{'}\"category\": \"...\", \"confidence\": 0.0{'}'}"
+        result = self._make_request(prompt)
+        if not result:
+            return {"category": "autre", "confidence": 0.3}
+        try:
+            # tenter d'extraire JSON depuis la réponse
+            start = result.find('{')
+            if start != -1:
+                payload = json.loads(result[start:])
+                return {"category": payload.get('category', 'autre'), "confidence": float(payload.get('confidence', 0.3))}
+        except Exception:
+            app_logger.warning("Groq response non JSON, fallback simple")
+        # fallback heuristics
+        lc = email_content.lower()
+        if 'facture' in lc or 'facturé' in lc:
+            return {"category": "facture", "confidence": 0.8}
+        if 'devis' in lc or 'quotation' in lc:
+            return {"category": "devis", "confidence": 0.8}
+        if 'réclamation' in lc or 'plainte' in lc:
+            return {"category": "reclamation", "confidence": 0.8}
+        if 'merci' in lc or 'informations' in lc:
+            return {"category": "information", "confidence": 0.6}
+        return {"category": "autre", "confidence": 0.3}
+
+    def summarize_email(self, email_content: str) -> str:
+        prompt = f"Résume en une phrase l'email suivant:\n{email_content}"
+        return self._make_request(prompt) or "Résumé indisponible"
+
+    def generate_response(self, email_content: str, category: str, template: str = "") -> str:
+        prompt = f"Génère une réponse courte pour un email catégorisé '{category}'. Contexte: {email_content}\nTemplate: {template}"
+        return self._make_request(prompt) or ""
+    
+    def classify_email(self, email_content: str) -> Dict[str, any]:
+        """Classifier un email avec Mistral."""
+        prompt = f"""Classifie l'email suivant dans UNE SEULE catégorie.
+Catégories: facture, devis, reclamation, spam, information, autre
 
 Email:
 {email_content}
 
-Reponds UNIQUEMENT en JSON valide: {{"category": "...", "confidence": 0.5, "reason": ""}}"""
+Réponds en JSON: {{"category": "...", "confidence": 0.0-1.0, "reason": "..."}}"""
         
         response = self._make_request(prompt)
         if response:
             try:
-                start = response.find('{')
-                if start != -1:
-                    data = json.loads(response[start:])
-                    return {
-                        "category": data.get("category", "autre"),
-                        "confidence": float(data.get("confidence", 0.5)),
-                        "reason": data.get("reason", "")
-                    }
-            except Exception as e:
-                app_logger.warning(f"Groq JSON parse failed: {e}, trying heuristics")
-        
-        # Fallback heuristics
-        lc = email_content.lower()
-        if 'facture' in lc or 'facturé' in lc:
-            return {"category": "facture", "confidence": 0.8, "reason": "Heuristic"}
-        if 'devis' in lc or 'quotation' in lc or 'quote' in lc:
-            return {"category": "devis", "confidence": 0.8, "reason": "Heuristic"}
-        if 'réclamation' in lc or 'plainte' in lc or 'complaint' in lc:
-            return {"category": "reclamation", "confidence": 0.8, "reason": "Heuristic"}
-        if 'spam' in lc or 'promotionnel' in lc:
-            return {"category": "spam", "confidence": 0.7, "reason": "Heuristic"}
-        if 'merci' in lc or 'informations' in lc or 'bonjour' in lc:
-            return {"category": "information", "confidence": 0.6, "reason": "Heuristic"}
-        return {"category": "autre", "confidence": 0.3, "reason": "No detection"}
+                # Extraire JSON de la réponse
+                import json
+                data = json.loads(response)
+                return {
+                    "category": data.get("category", "autre"),
+                    "confidence": data.get("confidence", 0.5),
+                    "reason": data.get("reason", "")
+                }
+            except:
+                return {"category": "autre", "confidence": 0.5, "reason": "Erreur de classification"}
+        return {"category": "autre", "confidence": 0.3, "reason": "Erreur API"}
     
     def summarize_email(self, email_content: str) -> str:
         """Résumer un email."""
-        prompt = f"Resume l'email suivant en 2-3 phrases:\n\n{email_content}\n\nResume:"
+        prompt = f"""Résume l'email suivant en 2-3 phrases:
+
+{email_content}
+
+Résumé:"""
+        
         response = self._make_request(prompt)
-        return response or "Impossible de resumer"
+        return response or "Impossible de résumer"
     
     def generate_response(self, email_content: str, category: str, template: str = "") -> str:
         """Générer une réponse professionnelle."""
-        template_instruction = f"Template:\n{template}\n" if template else ""
-        prompt = f"""Genere une reponse professionnelle a cet email '{category}' (1-2 paragraphes).
+        template_instruction = f"En utilisant ce template comme base:\n{template}\n" if template else ""
+        
+        prompt = f"""Génère une réponse professionnelle à cet email de {category}. Sois concis et courtois.
 {template_instruction}
-Email: {email_content}
 
-Reponse:"""
+Email original:
+{email_content}
+
+Réponse:"""
+        
         response = self._make_request(prompt)
-        return response or "Impossible de generer une reponse"
+        return response or "Impossible de générer une réponse"
 
 
 class OllamaProvider(LLMProvider):
     """Provider pour Ollama (complètement gratuit, local)."""
     
     def __init__(self, base_url: str = None):
+        """
+        Initialiser Ollama.
+        
+        Args:
+            base_url: URL Ollama (par défaut http://localhost:11434)
+        """
         self.base_url = base_url or settings.ollama_base_url
-        self.model = "mistral"
+        self.model = "mistral"  # ou "llama2", "neural-chat", etc.
     
     def _make_request(self, prompt: str) -> Optional[str]:
         """Faire une requête à Ollama."""
@@ -231,7 +231,7 @@ class OllamaProvider(LLMProvider):
 
 Email: {email_content[:500]}
 
-Categorie: """
+Catégorie: """
         
         response = self._make_request(prompt)
         if response:
@@ -243,23 +243,23 @@ Categorie: """
                 "confidence": 0.7,
                 "reason": "Classification Ollama"
             }
-        return {"category": "autre", "confidence": 0.3, "reason": "Ollama unavailable"}
+        return {"category": "autre", "confidence": 0.3, "reason": "Ollama indisponible"}
     
     def summarize_email(self, email_content: str) -> str:
         """Résumer avec Ollama."""
-        prompt = f"Resume en 2-3 phrases:\n{email_content[:500]}\n\nResume: "
+        prompt = f"Résume en 2-3 phrases:\n{email_content[:500]}\n\nRésumé: "
         response = self._make_request(prompt)
-        return response or "Impossible de resumer"
+        return response or "Impossible de résumer"
     
     def generate_response(self, email_content: str, category: str, template: str = "") -> str:
         """Générer réponse avec Ollama."""
-        prompt = f"""Genere une reponse professionnelle a cet email de {category}:
+        prompt = f"""Génère une réponse professionnelle à cet email de {category}:
 
 {email_content[:500]}
 
-Reponse: """
+Réponse: """
         response = self._make_request(prompt)
-        return response or "Impossible de generer une reponse"
+        return response or "Impossible de générer une réponse"
 
 
 class LLMService:
@@ -279,9 +279,13 @@ class LLMService:
                 cls._provider = OllamaProvider()
             elif provider_name == "groq":
                 cls._provider = GroqProvider()
+            elif provider_name == "openai":
+                # OpenAI provider not implemented here; fallback to Mistral for now
+                app_logger.info("OpenAI selected but not implemented, using Mistral as fallback")
+                cls._provider = MistralProvider()
             else:
-                app_logger.warning(f"Provider {provider_name} not implemented, using Groq")
-                cls._provider = GroqProvider()
+                app_logger.warning(f"Provider {provider_name} not implemented, using Ollama")
+                cls._provider = OllamaProvider()
             
             app_logger.info(f"LLM Provider initialized: {provider_name}")
         

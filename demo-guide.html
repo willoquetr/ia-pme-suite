@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Démos - IA PME</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .card h3 {
+            color: #555;
+            margin: 20px 0 10px;
+            font-size: 18px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 10px 10px 10px 0;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .feature {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .feature h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .step {
+            display: flex;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .step-content h3 {
+            margin-top: 0;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .demo-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .demo-card .icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .demo-card h3 {
+            margin: 0 0 10px;
+        }
+
+        .demo-card p {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📚 Guide Complet des Démos IA PME</h1>
+        <p>3 solutions interactives à tester gratuitement</p>
+    </header>
+
+    <div class="container">
+        <!-- Section Rapide -->
+        <div class="card">
+            <h2>🚀 Démarrage Rapide (2 minutes)</h2>
+            <p>Les démos fonctionnent directement dans votre navigateur - zéro installation requise!</p>
+            
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <div class="icon">📧</div>
+                    <h3>Email Classifier</h3>
+                    <p>Classifiez vos emails automatiquement</p>
+                    <a href="demos.html#email" class="btn btn-primary">Essayer →</a>
+                </div>
+                <div class="demo-card">
+                    <div class="icon">📄</div>
+                    <h3>PDF Generator</h3>
+                    <p>Générez des documents en 1 clic</p>
+                    <a href="demos.html#pdf" class="btn btn-primary">Essayer →</a>
+                </div>
+                <div class="demo-card">
+                    <div class="icon">📊</div>
+                    <h3>Excel Analyzer</h3>
+                    <p>Analysez vos données en profondeur</p>
+                    <a href="demos.html#excel" class="btn btn-primary">Essayer →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Email Classifier -->
+        <div class="card">
+            <h2>📧 Email Classifier - Classification Intelligente</h2>
+            <p>Automatisez le tri de vos emails en 6 catégories intelligentes.</p>
+
+            <h3>✨ Ce qu'il fait</h3>
+            <div class="feature">
+                <h4>🎯 Classifie automatiquement</h4>
+                <p>Chaque email est classé dans: <strong>Facture, Devis, Réclamation, Spam, Information, Autre</strong></p>
+            </div>
+            <div class="feature">
+                <h4>📊 Calcule la confiance</h4>
+                <p>Vous savez si la classification est certaine (95%) ou approximative (45%)</p>
+            </div>
+            <div class="feature">
+                <h4>⚡ Traite des centaines d'emails/jour</h4>
+                <p>Réponse en <100ms par email (ultraficace!)</p>
+            </div>
+
+            <h3>💡 Cas d'Usage</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Agence de 5 personnes</h4>
+                    <p>Reçoit 100+ emails/jour de types différents. Avec Email Classifier: <strong>3h/jour économisées</strong> en tri manuel</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Support Client</h4>
+                    <p>Les emails de réclamation sont automatiquement routés au bon département. <strong>Réponse 10x plus rapide</strong></p>
+                </div>
+            </div>
+
+            <h3>🧪 Tester Maintenant</h3>
+            <p>Allez sur la démo et essayez ces emails:</p>
+            <code style="display: block; padding: 15px; margin: 10px 0; border-radius: 5px; background: #f0f0f0;">
+"Bonjour, veuillez trouver ci-joint la facture #2024-001 pour 1500€"
+            </code>
+            <code style="display: block; padding: 15px; margin: 10px 0; border-radius: 5px; background: #f0f0f0;">
+"Merci pour votre commande. Voici un devis pour votre projet..."
+            </code>
+            <code style="display: block; padding: 15px; margin: 10px 0; border-radius: 5px; background: #f0f0f0;">
+"IMPORTANT: Votre commande n'a pas été livrée!"
+            </code>
+            <a href="demos.html#email" class="btn btn-primary">Tester Email Classifier →</a>
+        </div>
+
+        <!-- Section 2: PDF Generator -->
+        <div class="card">
+            <h2>📄 PDF Generator - Génération de Documents</h2>
+            <p>Créez des documents professionnels en 1 clic.</p>
+
+            <h3>✨ Ce qu'il fait</h3>
+            <div class="feature">
+                <h4>📋 5 types de documents</h4>
+                <p>Devis, Factures, Lettres, Contrats, Rapports - tout formaté professionnellement</p>
+            </div>
+            <div class="feature">
+                <h4>✏️ Remplissage intelligent</h4>
+                <p>Remplissez les champs et le document se génère automatiquement</p>
+            </div>
+            <div class="feature">
+                <h4>🤖 Contenu généré par IA</h4>
+                <p>Optionnel: L'IA génère le contenu du document pour vous</p>
+            </div>
+
+            <h3>💡 Cas d'Usage</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Cabinet Comptable</h4>
+                    <p>Génère 50 factures/mois. Avec PDF Generator: <strong>2h/jour économisées</strong> en saisie</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Petite Agence</h4>
+                    <p>Tous les devis sont formatés professionnellement = <strong>Plus de crédibilité</strong></p>
+                </div>
+            </div>
+
+            <h3>🧪 Tester Maintenant</h3>
+            <p>Sélectionnez un type de document et remplissez les champs:</p>
+            <ul style="margin-left: 20px; margin-top: 15px;">
+                <li>✅ <strong>Devis</strong> - Pour proposer un projet</li>
+                <li>✅ <strong>Facture</strong> - Pour facturer un client</li>
+                <li>✅ <strong>Lettre</strong> - Communication professionnelle</li>
+                <li>✅ <strong>Contrat</strong> - Accord officiel</li>
+                <li>✅ <strong>Rapport</strong> - Rapport d'activité</li>
+            </ul>
+            <a href="demos.html#pdf" class="btn btn-primary">Tester PDF Generator →</a>
+        </div>
+
+        <!-- Section 3: Excel Analyzer -->
+        <div class="card">
+            <h2>📊 Excel Analyzer - Audit Intelligent</h2>
+            <p>Détectez les problèmes dans vos données automatiquement.</p>
+
+            <h3>✨ Ce qu'il fait</h3>
+            <div class="feature">
+                <h4>🔍 Détecte les anomalies</h4>
+                <p>Valeurs manquantes, doublons, données incohérentes, colonnes vides</p>
+            </div>
+            <div class="feature">
+                <h4>📈 Génère des rapports</h4>
+                <p>Visualisations et suggestions pour améliorer vos données</p>
+            </div>
+            <div class="feature">
+                <h4>⚡ Analyse 100k+ lignes en secondes</h4>
+                <p>Même les fichiers Excel géants sont traités instantanément</p>
+            </div>
+
+            <h3>💡 Cas d'Usage</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Entreprise Export</h4>
+                    <p>Gère 5000 clients dans un Excel chaotique. Avec Excel Analyzer: <strong>Visibilité immédiate</strong> sur les problèmes</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>E-commerce</h4>
+                    <p>Détecte les erreurs d'inventaire avant qu'elles ne causent des problèmes = <strong>Meilleure précision</strong></p>
+                </div>
+            </div>
+
+            <h3>🧪 Tester Maintenant</h3>
+            <p>Collez vos données CSV (format texte) et l'IA analyse:</p>
+            <code style="display: block; padding: 15px; margin: 10px 0; border-radius: 5px; background: #f0f0f0;">
+Nom,Email,Montant,Date
+Alice,alice@email.com,100,2025-01-01
+Bob,,200,2025-01-02
+Charlie,charlie@email.com,100,2025-01-01
+            </code>
+            <p style="margin-top: 10px; font-size: 14px; color: #666;">→ L'analyseur détecte: Email manquant pour Bob, doublons possibles</p>
+            <a href="demos.html#excel" class="btn btn-primary">Tester Excel Analyzer →</a>
+        </div>
+
+        <!-- Section Questions -->
+        <div class="card">
+            <h2>❓ Questions Fréquentes</h2>
+
+            <h3>📱 Ça marche sur quel appareil?</h3>
+            <p>✅ Ordinateur, Tablette, Smartphone - Tous les navigateurs modernes (Chrome, Firefox, Safari, Edge)</p>
+
+            <h3>🔐 Mes données sont sécurisées?</h3>
+            <p>✅ <strong>Oui!</strong> Les démos fonctionnent 100% en local (JavaScript côté client). Vos données ne quittent jamais votre navigateur.</p>
+
+            <h3>💰 Combien ça coûte?</h3>
+            <p>✅ <strong>Gratuit!</strong> Les démos sont sans engagement. Pour utiliser en production, contactez-nous pour un devis.</p>
+
+            <h3>🚀 Comment passer à l'app complète?</h3>
+            <p>📧 Contactez-nous: <a href="mailto:rudy@ia-pme.fr">rudy@ia-pme.fr</a> pour une démo personnalisée et un devis adapté</p>
+
+            <h3>⚙️ Comment ça s'intègre à mon système?</h3>
+            <p>✅ API REST, Plugins, Exports - Tout est possible! Discutons de vos besoins spécifiques</p>
+
+            <h3>📊 Quel ROI j'attends?</h3>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Email Classifier:</strong> 3-4 heures/jour économisées</li>
+                <li><strong>PDF Generator:</strong> 2-3 heures/jour économisées</li>
+                <li><strong>Excel Analyzer:</strong> 5+ heures/semaine en décisions meilleures</li>
+                <li><strong>Total:</strong> <strong>10-15 heures/semaine</strong> = <strong>2-3 jours/semaine économisés!</strong></li>
+            </ul>
+        </div>
+
+        <!-- Section Contact -->
+        <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h2 style="color: white;">📞 Prêt à commencer?</h2>
+            <p style="font-size: 18px; margin-bottom: 20px;">Les démos vous ont plu? Parlons de vos besoins spécifiques!</p>
+            
+            <a href="mailto:rudy@ia-pme.fr?subject=Je%20veux%20une%20demo%20personnalisee" class="btn btn-primary">📧 Demander une démo personnalisée</a>
+            <a href="demos.html" class="btn btn-secondary">🎬 Retour aux démos</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 IA PME - Solutions IA pour Petites et Moyennes Entreprises</p>
+        <p style="font-size: 12px; margin-top: 10px;">Contactez: <a href="mailto:rudy@ia-pme.fr" style="color: #667eea;">rudy@ia-pme.fr</a></p>
+    </footer>
+</body>
+</html>

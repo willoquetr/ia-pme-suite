@@ -1,0 +1,20 @@
+Bonjour,
+
+Veuillez trouver ci-joint la facture #2025-001 pour les services rendus en décembre.
+
+Détails:
+- Consultation IA: 500€ HT
+- Mise en place système: 1200€ HT
+- Support technique: 300€ HT
+
+Montant total: 2000€ HT + TVA (20%) = 2400€ TTC
+
+Échéance de paiement: 30 jours à réception de facture.
+
+Conditions de paiement: Virement bancaire
+IBAN: FR76 1234 5678 9012 3456 7890 123
+
+Merci pour votre confiance.
+
+Cordialement,
+Équipe IA PME
