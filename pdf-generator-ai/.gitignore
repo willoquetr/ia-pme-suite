@@ -1,0 +1,20 @@
+# .gitignore for PDF Generator
+.env
+.env.local
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+data/
+data/*.db
+logs/
+generated_pdfs/
+*.log
+.vscode/
+.idea/
+*.swp
+.DS_Store

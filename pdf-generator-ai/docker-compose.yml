@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  pdf-generator:
+    build: .
+    ports:
+      - "8502:8502"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./generated_pdfs:/app/generated_pdfs
+    environment:
+      - LLM_PROVIDER=mistral
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - DB_TYPE=sqlite
+      - DB_PATH=./data/pdf_generator.db
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-secret-key}
+    container_name: pdf-generator-ai
+    restart: unless-stopped

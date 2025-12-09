@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA PME - Solutions IA pour Petites et Moyennes Entreprises</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .features {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .feature-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .benefit-list {
+            list-style: none;
+            font-size: 14px;
+        }
+
+        .benefit-list li {
+            padding: 5px 0;
+            color: #666;
+        }
+
+        .benefit-list li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .pricing {
+            padding: 80px 20px;
+        }
+
+        .pricing h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .pricing-card.featured {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .price small {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .pricing-card li {
+            padding: 10px 0;
+            color: #666;
+            border-bottom: 1px solid #eee;
+        }
+
+        .pricing-card li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .use-cases {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+
+        .use-cases h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .use-case-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .use-case-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .use-case-card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        footer {
+            background: #222;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 15px;
+                font-size: 14px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .feature-grid,
+            .pricing-grid,
+            .use-case-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">IA PME</div>
+            <ul>
+                <li><a href="#features">Apps</a></li>
+                <li><a href="demos.html">🚀 Démos</a></li>
+                <li><a href="#pricing">Prix</a></li>
+                <li><a href="#use-cases">Cas d'usage</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>L'Intelligence Artificielle pour vos PME</h1>
+            <p>Automatisez vos taches quotidiennes avec nos 3 solutions IA completes et intuitives</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="window.location.href='mailto:rudy@ia-pme.fr?subject=Démarrage%20gratuit&body=Bonjour,%0A%0AJe%20souhaite%20démarrer%20gratuitement.'">Démarrer gratuitement</button>
+                <button class="btn btn-secondary" onclick="window.location.href='demos.html'">Voir la démo</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Nos Solutions</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📧</div>
+                    <h3>Classifier Emails</h3>
+                    <p>Triiez automatiquement vos emails en categories (factures, devis, reclamations...)</p>
+                    <ul class="benefit-list">
+                        <li>Classification IA en temps reel</li>
+                        <li>Generation de reponses automatiques</li>
+                        <li>Resume intelligents</li>
+                        <li>Historique complet</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <h3>Generer des PDF</h3>
+                    <p>Creez devis, factures et contrats en moins de 2 minutes</p>
+                    <ul class="benefit-list">
+                        <li>5 types de documents</li>
+                        <li>Generation IA du contenu</li>
+                        <li>Templates professionnels</li>
+                        <li>Export PDF instantane</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analyser Excel</h3>
+                    <p>Detentez anomalies et obtenez des insights sur vos donnees en 30 secondes</p>
+                    <ul class="benefit-list">
+                        <li>Detection automatique d'anomalies</li>
+                        <li>Statistiques detaillees</li>
+                        <li>Recommendations d'amelioration</li>
+                        <li>Visualisations interactives</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="use-cases" id="use-cases">
+        <div class="container">
+            <h2>Cas d'usage</h2>
+            <div class="use-case-grid">
+                <div class="use-case-card">
+                    <h3>🏠 Agences Immobilieres</h3>
+                    <p><strong>Classifier Emails:</strong> Triez automatiquement les demandes, offres et negotiations. Repondez aux clients en 2 min au lieu de 30 min.</p>
+                </div>
+
+                <div class="use-case-card">
+                    <h3>🏢 Cabinets de Consulting</h3>
+                    <p><strong>Generer PDF:</strong> Creez devis et contrats en quelques clics. Gagnez 3-4 heures par semaine.</p>
+                </div>
+
+                <div class="use-case-card">
+                    <h3>📦 E-Commerce</h3>
+                    <p><strong>Analyser Excel:</strong> Surveillez stocks et ventes en temps reel. Detentez les anomalies immediatement.</p>
+                </div>
+
+                <div class="use-case-card">
+                    <h3>🏗️ Petits BTP</h3>
+                    <p><strong>Generer PDF:</strong> Devis et factures auto-generees. Administratif reduit de 60%.</p>
+                </div>
+
+                <div class="use-case-card">
+                    <h3>📞 Centres d'Appels</h3>
+                    <p><strong>Classifier Emails:</strong> Routage auto des demandes. Support client 10x plus rapide.</p>
+                </div>
+
+                <div class="use-case-card">
+                    <h3>💼 PMEs Generales</h3>
+                    <p><strong>Tous les outils:</strong> Une solution complete pour automatiser votre administration.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2>Nos Prix</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Gratuit</h3>
+                    <div class="price">0€<small>/mois</small></div>
+                    <ul>
+                        <li>5 classifications/jour</li>
+                        <li>2 PDFs/jour</li>
+                        <li>1 analyse/mois</li>
+                        <li>1 utilisateur</li>
+                        <li>Support par email</li>
+                    </ul>
+                    <button class="btn btn-secondary">Essayer</button>
+                </div>
+
+                <div class="pricing-card featured">
+                    <h3>Starter</h3>
+                    <div class="price">99€<small>/mois</small></div>
+                    <ul>
+                        <li>500 classifications/mois</li>
+                        <li>50 PDFs/mois</li>
+                        <li>10 analyses/mois</li>
+                        <li>3 utilisateurs</li>
+                        <li>Support prioritaire</li>
+                    </ul>
+                    <button class="btn btn-primary">Commencer</button>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Pro</h3>
+                    <div class="price">299€<small>/mois</small></div>
+                    <ul>
+                        <li>5000 classifications/mois</li>
+                        <li>500 PDFs/mois</li>
+                        <li>100 analyses/mois</li>
+                        <li>10 utilisateurs</li>
+                        <li>API intégration</li>
+                        <li>Support 24/7</li>
+                    </ul>
+                    <button class="btn btn-secondary">En savoir plus</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section" id="contact">
+        <div class="container">
+            <h2>Prets a transformer votre PME?</h2>
+            <p>Testez nos solutions gratuitement - Aucune carte de credit requise.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="window.location.href='demos.html'">🚀 Essayer gratuitement</button>
+                <button class="btn btn-secondary" onclick="window.location.href='mailto:rudy@ia-pme.fr?subject=Demo%20personnalisée'">Demander une démo</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 IA PME - Solutions IA pour Petites et Moyennes Entreprises</p>
+        <p>Créé par Rudy Willoquet | rudy@ia-pme.fr</p>
+        <p><a href="#" style="color: #999; text-decoration: none;">Mentions légales</a> | <a href="#" style="color: #999; text-decoration: none;">Politique de confidentialité</a></p>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

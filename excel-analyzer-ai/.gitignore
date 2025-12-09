@@ -1,0 +1,17 @@
+.env
+.env.local
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+data/
+data/*.db
+logs/
+*.log
+.vscode/
+.idea/
+*.swp
+.DS_Store

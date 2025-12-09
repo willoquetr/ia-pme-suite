@@ -1,0 +1,15 @@
+# CODEOWNERS - IA-PME Suite
+
+# This repository is maintained by Rudy Willoquet
+# All code, design, and content is proprietary
+
+* @willoquetr
+
+# Security policy
+.github/SECURITY.md @willoquetr
+
+# License must never be modified
+LICENSE.md @willoquetr
+
+# Landing page content is protected
+index.html @willoquetr

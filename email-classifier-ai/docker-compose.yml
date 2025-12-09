@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  email-classifier:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - LLM_PROVIDER=mistral
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - DB_TYPE=sqlite
+      - DB_PATH=./data/email_classifier.db
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-secret-key}
+    container_name: email-classifier-ai
+    restart: unless-stopped
+
+  # Optionnel : Ollama pour LLM local gratuit
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    container_name: ollama
+    restart: unless-stopped
+    # Pour démarrer un modèle : docker exec ollama ollama pull mistral
+
+volumes:
+  ollama-data:

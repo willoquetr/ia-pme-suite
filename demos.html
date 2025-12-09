@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Démos Interactives - IA PME</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background: #f8f9fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        main {
+            padding: 40px 0;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .demo-section h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .demo-section .description {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .demo-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .demo-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        textarea, input[type="text"], input[type="file"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #764ba2;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .result-box {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .result-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .result-item {
+            background: white;
+            border-left: 3px solid #667eea;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 2px;
+        }
+
+        .result-item .label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .result-item .value {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .tag.facture { background: #e74c3c; }
+        .tag.devis { background: #3498db; }
+        .tag.reclamation { background: #f39c12; }
+        .tag.spam { background: #95a5a6; }
+        .tag.information { background: #27ae60; }
+        .tag.autre { background: #9b59b6; }
+
+        .confidence {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #ecf0f1;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        footer a {
+            color: #ecf0f1;
+            text-decoration: none;
+        }
+
+        .success { color: #27ae60; font-weight: 600; }
+        .error { color: #e74c3c; font-weight: 600; }
+        .info { color: #3498db; }
+
+        .loading {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">🚀 IA PME</div>
+            <div class="subtitle">Démos Interactives - Testez nos solutions en direct</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Email Classifier Demo -->
+            <section class="demo-section">
+                <h2>📧 Email Classifier AI</h2>
+                <p class="description">Classifiez automatiquement vos emails en 6 catégories (facture, devis, réclamation, spam, information, autre).</p>
+                
+                <div class="demo-content">
+                    <div>
+                        <h3>Entrez votre email</h3>
+                        <textarea id="email-input" placeholder="Collez le contenu de votre email ici..."></textarea>
+                        <div class="button-group">
+                            <button onclick="classifyEmail()">🔍 Classifier</button>
+                            <button onclick="clearEmail()">🗑️ Effacer</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Résultat</h3>
+                        <div id="email-result" class="result-box" style="display:none;">
+                            <h4>Classification</h4>
+                            <div id="email-output"></div>
+                        </div>
+                        <div id="email-placeholder" style="color: #999; padding: 20px; text-align: center;">
+                            Les résultats apparaîtront ici
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PDF Generator Demo -->
+            <section class="demo-section">
+                <h2>📄 PDF Generator AI</h2>
+                <p class="description">Génère des documents professionnels (devis, factures, lettres) à partir de vos données.</p>
+                
+                <div class="demo-content">
+                    <div>
+                        <h3>Paramètres du document</h3>
+                        <label for="doc-type">Type de document</label>
+                        <select id="doc-type" onchange="updatePdfFields()">
+                            <option value="devis">Devis</option>
+                            <option value="facture">Facture</option>
+                            <option value="lettre">Lettre commerciale</option>
+                            <option value="contrat">Contrat</option>
+                            <option value="rapport">Rapport</option>
+                        </select>
+                        
+                        <div id="pdf-fields" style="margin-top: 15px;"></div>
+                        
+                        <div class="button-group">
+                            <button onclick="generatePdf()">📋 Générer aperçu</button>
+                            <button onclick="clearPdf()">🗑️ Réinitialiser</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Aperçu du document</h3>
+                        <div id="pdf-result" class="result-box" style="display:none;">
+                            <h4>Aperçu généré</h4>
+                            <div id="pdf-output"></div>
+                        </div>
+                        <div id="pdf-placeholder" style="color: #999; padding: 20px; text-align: center;">
+                            L'aperçu apparaîtra ici
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Excel Analyzer Demo -->
+            <section class="demo-section">
+                <h2>📊 Excel Analyzer AI</h2>
+                <p class="description">Analysez vos données Excel pour détecter les anomalies (valeurs manquantes, doublons, colonnes vides).</p>
+                
+                <div class="demo-content">
+                    <div>
+                        <h3>Données à analyser</h3>
+                        <label for="excel-data">Entrez vos données (format: colonne1,colonne2 | valeur1,valeur2)</label>
+                        <textarea id="excel-data" placeholder="Exemple:&#10;Nom,Email,Montant&#10;Alice,alice@test.fr,100&#10;Bob,,200&#10;Bob,bob@test.fr,200" style="font-size: 12px; min-height: 200px;"></textarea>
+                        <div class="button-group">
+                            <button onclick="analyzeExcel()">🔎 Analyser</button>
+                            <button onclick="loadExcelExample()">📋 Exemple</button>
+                            <button onclick="clearExcel()">🗑️ Effacer</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Analyse</h3>
+                        <div id="excel-result" class="result-box" style="display:none;">
+                            <h4>Résultats d'analyse</h4>
+                            <div id="excel-output"></div>
+                        </div>
+                        <div id="excel-placeholder" style="color: #999; padding: 20px; text-align: center;">
+                            L'analyse apparaîtra ici
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 IA PME - Solutions IA pour Petites et Moyennes Entreprises</p>
+        <p>Intéressé? <a href="mailto:rudy@ia-pme.fr">Contactez-nous</a> pour une démo complète</p>
+    </footer>
+
+    <script>
+        // ============ EMAIL CLASSIFIER ============
+        const emailCategories = ['facture', 'devis', 'reclamation', 'spam', 'information', 'autre'];
+        
+        const emailKeywords = {
+            facture: ['facture', 'invoice', 'montant', 'paiement', 'échéance', 'payable'],
+            devis: ['devis', 'quote', 'tarif', 'estimation', 'prix', 'offre commerciale'],
+            reclamation: ['problème', 'issue', 'réclamation', 'défaut', 'incident', 'urgence', 'non conforme'],
+            spam: ['achetez', 'cliquez ici', 'offre limitée', 'gagner', 'cadeau', 'viagra'],
+            information: ['info', 'update', 'notification', 'actualité', 'rapport', 'synthèse']
+        };
+
+        function classifyEmail() {
+            const input = document.getElementById('email-input').value.trim().toLowerCase();
+            
+            if (!input) {
+                alert('Veuillez entrer un email');
+                return;
+            }
+
+            let topCategory = 'autre';
+            let maxScore = 0;
+
+            for (const [category, keywords] of Object.entries(emailKeywords)) {
+                let score = 0;
+                keywords.forEach(kw => {
+                    if (input.includes(kw)) score += 1;
+                });
+                if (score > maxScore) {
+                    maxScore = score;
+                    topCategory = category;
+                }
+            }
+
+            const confidence = maxScore > 0 ? Math.min(0.5 + (maxScore * 0.15), 0.95) : 0.3;
+
+            const resultHtml = `
+                <div class="result-item">
+                    <div class="label">Catégorie</div>
+                    <div class="value" style="margin-top: 8px;">
+                        <span class="tag ${topCategory}">${topCategory.toUpperCase()}</span>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="label">Confiance</div>
+                    <div class="value" style="margin-top: 8px;">
+                        <span class="confidence">${(confidence * 100).toFixed(0)}%</span>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="label">Mots-clés détectés</div>
+                    <div class="value">${maxScore > 0 ? maxScore + ' match' + (maxScore > 1 ? 'es' : '') : 'Aucun mot-clé spécifique'}</div>
+                </div>
+            `;
+
+            document.getElementById('email-output').innerHTML = resultHtml;
+            document.getElementById('email-result').style.display = 'block';
+            document.getElementById('email-placeholder').style.display = 'none';
+        }
+
+        function clearEmail() {
+            document.getElementById('email-input').value = '';
+            document.getElementById('email-result').style.display = 'none';
+            document.getElementById('email-placeholder').style.display = 'block';
+        }
+
+        // ============ PDF GENERATOR ============
+        const pdfDocTypes = {
+            devis: {
+                title: 'Devis',
+                fields: [
+                    { name: 'nom_client', label: 'Nom du client', required: true },
+                    { name: 'email_client', label: 'Email', required: true },
+                    { name: 'description', label: 'Description des services', required: true },
+                    { name: 'montant', label: 'Montant HT (€)', required: true },
+                    { name: 'validite_jours', label: 'Validité (jours)', required: false, value: '30' }
+                ]
+            },
+            facture: {
+                title: 'Facture',
+                fields: [
+                    { name: 'nom_client', label: 'Client', required: true },
+                    { name: 'numero_facture', label: 'Numéro', required: true },
+                    { name: 'description', label: 'Prestations', required: true },
+                    { name: 'montant', label: 'Montant (€)', required: true },
+                    { name: 'date_echéance', label: 'Date d\'échéance', required: false }
+                ]
+            },
+            lettre: {
+                title: 'Lettre',
+                fields: [
+                    { name: 'nom_destinataire', label: 'Destinataire', required: true },
+                    { name: 'sujet', label: 'Sujet', required: true },
+                    { name: 'corps', label: 'Message', required: true },
+                    { name: 'nom_signature', label: 'Votre nom', required: true }
+                ]
+            },
+            contrat: {
+                title: 'Contrat',
+                fields: [
+                    { name: 'partie_a', label: 'Partie A', required: true },
+                    { name: 'partie_b', label: 'Partie B', required: true },
+                    { name: 'sujet', label: 'Objet du contrat', required: true }
+                ]
+            },
+            rapport: {
+                title: 'Rapport',
+                fields: [
+                    { name: 'titre_rapport', label: 'Titre', required: true },
+                    { name: 'résumé', label: 'Résumé', required: true },
+                    { name: 'conclusions', label: 'Conclusions', required: true }
+                ]
+            }
+        };
+
+        function updatePdfFields() {
+            const docType = document.getElementById('doc-type').value;
+            const config = pdfDocTypes[docType];
+            const fieldsDiv = document.getElementById('pdf-fields');
+            
+            let html = '';
+            config.fields.forEach(field => {
+                const required = field.required ? ' (requis)' : '';
+                const value = field.value || '';
+                html += `
+                    <div style="margin-bottom: 12px;">
+                        <label for="pdf-${field.name}" style="display: block; margin-bottom: 4px; font-weight: 500; font-size: 13px;">
+                            ${field.label}${required}
+                        </label>
+                        <input type="text" id="pdf-${field.name}" value="${value}" placeholder="${field.label}" style="min-height: 35px;">
+                    </div>
+                `;
+            });
+            fieldsDiv.innerHTML = html;
+        }
+
+        function generatePdf() {
+            const docType = document.getElementById('doc-type').value;
+            const config = pdfDocTypes[docType];
+            
+            let fields = {};
+            let valid = true;
+
+            config.fields.forEach(field => {
+                const value = document.getElementById(`pdf-${field.name}`).value.trim();
+                if (field.required && !value) {
+                    alert(`Le champ "${field.label}" est requis`);
+                    valid = false;
+                    return;
+                }
+                fields[field.name] = value;
+            });
+
+            if (!valid) return;
+
+            // Generate simple preview
+            const preview = generatePdfPreview(docType, fields);
+            document.getElementById('pdf-output').innerHTML = preview;
+            document.getElementById('pdf-result').style.display = 'block';
+            document.getElementById('pdf-placeholder').style.display = 'none';
+        }
+
+        function generatePdfPreview(docType, fields) {
+            let html = `<div style="font-family: Georgia, serif; line-height: 1.8; color: #333;">`;
+            
+            if (docType === 'devis') {
+                html += `
+                    <div style="text-align: center; margin-bottom: 30px; font-size: 18px; font-weight: bold; color: #667eea;">
+                        ${pdfDocTypes.devis.title}
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <strong>Pour:</strong> ${fields.nom_client}<br>
+                        <strong>Email:</strong> ${fields.email_client}
+                    </div>
+                    <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-left: 3px solid #667eea;">
+                        <strong>Description:</strong><br>${fields.description}<br><br>
+                        <strong>Montant:</strong> ${fields.montant}€ HT<br>
+                        <strong>Validité:</strong> ${fields.validite_jours} jours
+                    </div>
+                    <div style="margin-top: 30px; font-size: 12px; color: #999;">
+                        Merci de confirmer si vous souhaitez procéder avec cette offre.
+                    </div>
+                `;
+            } else if (docType === 'facture') {
+                html += `
+                    <div style="text-align: center; margin-bottom: 30px; font-size: 18px; font-weight: bold; color: #667eea;">
+                        FACTURE #${fields.numero_facture}
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <strong>Facturé à:</strong> ${fields.nom_client}
+                    </div>
+                    <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-left: 3px solid #e74c3c;">
+                        ${fields.description}
+                    </div>
+                    <div style="margin-top: 30px; font-size: 14px; font-weight: bold;">
+                        Montant total: <span style="color: #e74c3c;">${fields.montant}€</span>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px;">
+                        Échéance: ${fields.date_echéance || 'À réception'}
+                    </div>
+                `;
+            } else if (docType === 'lettre') {
+                html += `
+                    <div style="margin-bottom: 20px;">À: ${fields.nom_destinataire}</div>
+                    <div style="margin-bottom: 30px;"><strong>Sujet:</strong> ${fields.sujet}</div>
+                    <div style="margin-bottom: 30px; line-height: 2;">
+                        ${fields.corps}
+                    </div>
+                    <div style="margin-top: 30px;">
+                        Cordialement,<br><br>
+                        ${fields.nom_signature}
+                    </div>
+                `;
+            } else {
+                html += `<p style="color: #999;">Aperçu du document de type "${docType}"</p>`;
+            }
+            
+            html += `</div>`;
+            return html;
+        }
+
+        function clearPdf() {
+            updatePdfFields();
+            document.getElementById('pdf-result').style.display = 'none';
+            document.getElementById('pdf-placeholder').style.display = 'block';
+        }
+
+        // ============ EXCEL ANALYZER ============
+        function analyzeExcel() {
+            const data = document.getElementById('excel-data').value.trim();
+            if (!data) {
+                alert('Veuillez entrer des données');
+                return;
+            }
+
+            const lines = data.split('\n').filter(l => l.trim());
+            if (lines.length < 2) {
+                alert('Minimum 1 en-tête + 1 ligne de données');
+                return;
+            }
+
+            const headers = lines[0].split(',').map(h => h.trim());
+            const rows = lines.slice(1).map(line => line.split(',').map(v => v.trim()));
+
+            const analysis = {
+                summary: {
+                    rows: rows.length,
+                    columns: headers.length
+                },
+                anomalies: [],
+                suggestions: []
+            };
+
+            // Detect missing values
+            headers.forEach((col, idx) => {
+                const missing = rows.filter(row => !row[idx]).length;
+                if (missing > 0) {
+                    analysis.anomalies.push({
+                        type: 'valeurs_manquantes',
+                        column: col,
+                        count: missing,
+                        percent: ((missing / rows.length) * 100).toFixed(1)
+                    });
+                }
+            });
+
+            // Detect duplicates
+            const seen = {};
+            rows.forEach(row => {
+                const key = row.join('|');
+                if (seen[key]) {
+                    seen[key]++;
+                } else {
+                    seen[key] = 1;
+                }
+            });
+            const duplicates = Object.values(seen).filter(c => c > 1).length;
+            if (duplicates > 0) {
+                analysis.anomalies.push({
+                    type: 'doublons',
+                    count: duplicates,
+                    description: `${duplicates} lignes en doublon`
+                });
+            }
+
+            // Detect empty columns
+            headers.forEach((col, idx) => {
+                if (rows.every(row => !row[idx])) {
+                    analysis.anomalies.push({
+                        type: 'colonne_vide',
+                        column: col,
+                        description: 'Colonne complètement vide'
+                    });
+                }
+            });
+
+            const resultHtml = `
+                <div class="result-item">
+                    <div class="label">Résumé</div>
+                    <div class="value">${analysis.summary.rows} lignes × ${analysis.summary.columns} colonnes</div>
+                </div>
+                ${analysis.anomalies.length > 0 ? `
+                    <div class="result-item">
+                        <div class="label">⚠️ Anomalies détectées (${analysis.anomalies.length})</div>
+                        <div class="value" style="margin-top: 8px;">
+                            ${analysis.anomalies.map(a => `
+                                <div style="margin-bottom: 8px;">
+                                    <strong style="color: #e74c3c;">${a.type}</strong><br>
+                                    ${a.column ? `<span>Colonne: ${a.column}</span><br>` : ''}
+                                    ${a.count ? `<span>${a.count} occurrence(s)</span>` : ''}
+                                    ${a.percent ? `<span>(${a.percent}%)</span>` : ''}
+                                    ${a.description ? `<span>${a.description}</span>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : `
+                    <div class="result-item">
+                        <div class="label success">✓ Aucune anomalie détectée</div>
+                    </div>
+                `}
+            `;
+
+            document.getElementById('excel-output').innerHTML = resultHtml;
+            document.getElementById('excel-result').style.display = 'block';
+            document.getElementById('excel-placeholder').style.display = 'none';
+        }
+
+        function loadExcelExample() {
+            document.getElementById('excel-data').value = `Nom,Email,Montant,Statut
+Alice,alice@test.fr,100,Actif
+Bob,,200,Actif
+Bob,bob@test.fr,200,Actif
+Charlie,charlie@test.fr,,Inactif
+,david@test.fr,150,Actif`;
+            analyzeExcel();
+        }
+
+        function clearExcel() {
+            document.getElementById('excel-data').value = '';
+            document.getElementById('excel-result').style.display = 'none';
+            document.getElementById('excel-placeholder').style.display = 'block';
+        }
+
+        // Initialize PDF fields on load
+        window.addEventListener('DOMContentLoaded', function() {
+            updatePdfFields();
+        });
+    </script>
+</body>
+</html>

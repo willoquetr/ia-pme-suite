@@ -1,0 +1,32 @@
+{
+  "name": "IA-PME Suite",
+  "description": "Proprietary AI applications for SMEs - Email Classification, PDF Generation, Excel Analysis",
+  "homepage": "https://ia-pme-suite.github.io",
+  "repository": "https://github.com/willoquetr/ia-pme-suite",
+  "funding": {
+    "custom": ["https://contact@ia-pme.fr"]
+  },
+  "keywords": [
+    "ai",
+    "pme",
+    "sme",
+    "email-classification",
+    "pdf-generation",
+    "excel-analysis",
+    "proprietary"
+  ],
+  "license": "PROPRIETARY",
+  "author": {
+    "name": "Rudy Willoquet",
+    "email": "rudy@ia-pme.fr",
+    "url": "https://ia-pme.vercel.app"
+  },
+  "private": false,
+  "topics": [
+    "proprietary",
+    "commercial",
+    "ai",
+    "sme",
+    "business-intelligence"
+  ]
+}
