@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+PDF Generator AI
+Copyright © 2025 Rudy Willoquet (IA PME). All rights reserved.
+Licensed under the MIT License - see LICENSE.md for details.
+
+Module: src/pdf_generator.py
+Purpose: Generate business documents (devis, facture, lettre, contrat, rapport) as PDF
+"""
+
 import os
 from datetime import datetime
 from typing import Dict, Optional

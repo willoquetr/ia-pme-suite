@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+Excel Analyzer AI
+Copyright © 2025 Rudy Willoquet (IA PME). All rights reserved.
+Licensed under the MIT License - see LICENSE.md for details.
+
+Module: src/excel_analyzer.py
+Purpose: Detect data anomalies (missing values, duplicates, empty columns) and provide suggestions
+"""
+
 import pandas as pd
 import numpy as np
 from typing import Dict, Tuple, List

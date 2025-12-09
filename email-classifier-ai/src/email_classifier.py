@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+Email Classifier AI
+Copyright © 2025 Rudy Willoquet (IA PME). All rights reserved.
+Licensed under the MIT License - see LICENSE.md for details.
+
+Module: src/email_classifier.py
+Purpose: Classify business emails into French categories (facture, devis, réclamation, spam, information, autre)
+"""
+
 from typing import Dict, List
 from src.llm_service import LLMService
 from src.logger import app_logger
